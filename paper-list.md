@@ -48,6 +48,7 @@ flowchart TD
 | Q-learning with Adjoint Matching (QAM) | [arXiv 2601.14234](https://arxiv.org/abs/2601.14234) | #RL #diffusion-policy #empirical #core | **LWD 做 policy extraction 用的就是这个方法**——把 critic 梯度经 adjoint matching 转成 flow 策略的逐步监督，绕开对多步去噪反传的数值不稳。解决「怎么用 Q-function 训 diffusion/flow 策略」，RISE/LWD 都绕不开。读 LWD 的前置。 | 2026-05-16 |
 | LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion | [arXiv 2602.12215](https://arxiv.org/abs/2602.12215) | #world-model #data-quality #manipulation #dexterous-hand #empirical #core | 聚焦异质 embodied 数据的**质量问题**：不丢弃低质量轨迹，而是「给不同质量的数据分配不同角色」。跟 RISE/RECAP 的三类数据（expert/correction/rollout 区别对待）是同一主题——读时可能抽出一个「按数据质量分配角色」的概念笔记。latent dynamics + policy + visual forecasting 在结构化隐空间联合训练，含灵巧手 / 接触丰富任务。 | 2026-05-16 |
 | RL Token: Bootstrapping Online RL with Vision-Language-Action Models | [arXiv 2604.23073](https://arxiv.org/abs/2604.23073) | #RL #post-training #VLA #manipulation #empirical #core | 又一个「VLA 后训练做 online RL」的方案，跟 RISE / LWD 同问题、不同解：RL Token 走**极简路线**——加一个紧凑的「RL token」读出表示 + 小 actor-critic head，既保留预训练知识又给 RL 一个接口，真机几分钟到几小时精炼动作。相对 RISE（想象空间）/ LWD（舰队真机），它是「最小侵入式」改造。Sergey Levine 组。 | 2026-05-16 |
+| DiT4DiT: Jointly Modeling Video Dynamics and Actions for Generalizable Robot Control | [arXiv 2506.17518](https://arxiv.org/abs/2506.17518) | #world-model #VLA #manipulation #empirical #core | **Joint Diffusion WAM**（[[世界模型 主题地图]] §5.2b）这条线很有影响力的工作——跟 UWM / Cosmos Policy / [[LDA-1B]] / UVA / DreamZero 同簇。跟我已读的 [[RISE  Self-Improving Robot Policy with Compositional World Model\|RISE]] 是**结构性对照**：RISE 把 WM 当外部工具（cascaded 思想，[[Compositional World Model]]），DiT4DiT 把 WM 整合进策略架构本身（joint）——回答的是同一问题的两种范式。 | 2026-05-29 |
 
 ### P1 想读（相关但不急，3 个月内读）
 
@@ -55,6 +56,7 @@ flowchart TD
 | :--- | :--- | :--- | :--- | :--- |
 | Decoupled Q-Chunking | [arXiv 2512.10926](https://arxiv.org/abs/2512.10926) | #RL #empirical #related | Q-chunking 的改进：critic 的 chunk 长度与 policy 解耦——策略可更短更 reactive，同时靠 optimistic distilled critic 保留多步 value 传播。读完 Q-chunking 再看。 | 2026-05-16 |
 | DyWA: Dynamics-adaptive World Action Model for Generalizable Non-prehensile Manipulation | [arXiv 2503.16806](https://arxiv.org/abs/2503.16806) | #world-model #manipulation #empirical #related | 跟 LDA-1B 同一作者（Jiangran Lyu），是「World/Latent Dynamics + Action Model」这条线较早的一篇，LDA-1B 像它的 scaling 版。核心 dynamics-adaptive：靠历史轨迹推断物体质量/摩擦等动力学变化并自适应，做非抓取式操作（推/滑），无需多视角相机或精确位姿。读它能看清 LDA-1B 的方法谱系。 | 2026-05-16 |
+| A Survey of State Representation Learning for Deep Reinforcement Learning | [arXiv 2603.10448](https://arxiv.org/abs/2603.10448) | #survey #RL #representation-learning #related | 综述里把 **state representation 放在比 reward 更核心**的位置——这个 state-centric 视角很合我胃口，是审视 [[RL 与模型后训练]] 时一个有力的反向锚点。SRL 是 [[Compositional World Model]] / JEPA / RSSM / contrastive / bisimulation 等的共同上位词；当**字典型参考**用，写 related work 时回头查 + cite。 | 2026-05-29 |
 
 ### P2 有空看看（边缘相关，看心情）
 
@@ -97,6 +99,7 @@ flowchart TD
 - `#advantage-conditioned` —— Advantage-conditioned 训练范式
 - `#data-quality` —— 数据质量 / 异质数据处理 / 按质量分配角色
 - `#inference-dynamics` —— 推理动力学：策略如何表示 / 生成 / 实时执行动作
+- `#representation-learning` —— 表示学习 / state representation（RSSM / JEPA / contrastive / bisimulation 的上位词）
 
 ### 应用场景
 - `#manipulation` —— 机械臂抓取/操作
@@ -140,7 +143,7 @@ flowchart TD
 
 ## 📊 统计（手动维护，月底盘点用）
 
-- To-Read 总数：7（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token；P1：Decoupled Q-Chunking / DyWA）
+- To-Read 总数：9（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token / DiT4DiT；P1：Decoupled Q-Chunking / DyWA / SRL Survey）
 - Reading：1（World Action Models 综述，2026-05-17 起）
 - Done：1
 - **本月新读完**：1
