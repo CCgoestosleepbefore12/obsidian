@@ -8,3 +8,6 @@
 
 # macOS
 .DS_Store
+
+# Claude Code — 本地配置/缓存，不同步
+.claude/
