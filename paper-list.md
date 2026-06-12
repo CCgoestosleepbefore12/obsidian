@@ -73,6 +73,7 @@ flowchart TD
 | 标题 | 起始日期 | 进度 | 笔记 |
 | :--- | :--- | :--- | :--- |
 | World Action Models: The Next Frontier in Embodied AI（综述） | 2026-05-17 | 在读（PDF: `pdfs/World Action Models Survey.pdf`） | 笔记待建 |
+| DSRL: Steering Your Diffusion Policy with Latent Space RL（[arXiv 2506.15799](https://arxiv.org/abs/2506.15799)，CoRL 2025，Levine 组） | 2026-06-10 | 在读（PDF: `pdfs/DSRL Steering Your Diffusion Policy with Latent Space RL.pdf`） | 笔记待建；已在 [[Advantage-conditioned 微调]] 的「对立思路」被引 |
 
 ---
 
@@ -81,6 +82,8 @@ flowchart TD
 | 标题 | 主题标签 | 完成日期 | 笔记链接 |
 | :--- | :--- | :--- | :--- |
 | RISE: Self-Improving Robot Policy with Compositional World Model | #world-model #VLA #model-based-rl #core | 2026-05-15 | [[RISE  Self-Improving Robot Policy with Compositional World Model]] |
+| HIL: Hybrid Imitation Learning for Dynamic Athletic Control（TOG 2026） | #RL #imitation-learning #humanoid-control #adversarial-imitation #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
+| Generalizing from References: Multi-Task Reference & Goal-Driven RL（[arXiv 2602.20375](https://arxiv.org/abs/2602.20375)，真机 G1） | #RL #imitation-learning #humanoid-control #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
 
 ---
 
@@ -96,6 +99,8 @@ flowchart TD
 - `#model-based-rl` —— Model-based RL
 - `#diffusion-policy` —— 扩散策略
 - `#imitation-learning` —— 模仿学习
+- `#humanoid-control` —— 人形全身运动控制 / 角色动画（parkour / locomotion / 全身技能）
+- `#adversarial-imitation` —— 对抗模仿学习（AIL / AMP / ASE：判别器做分布匹配）
 - `#advantage-conditioned` —— Advantage-conditioned 训练范式
 - `#data-quality` —— 数据质量 / 异质数据处理 / 按质量分配角色
 - `#inference-dynamics` —— 推理动力学：策略如何表示 / 生成 / 实时执行动作
@@ -144,6 +149,6 @@ flowchart TD
 ## 📊 统计（手动维护，月底盘点用）
 
 - To-Read 总数：9（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token / DiT4DiT；P1：Decoupled Q-Chunking / DyWA / SRL Survey）
-- Reading：1（World Action Models 综述，2026-05-17 起）
-- Done：1
-- **本月新读完**：1
+- Reading：2（World Action Models 综述，2026-05-17 起；DSRL，2026-06-10 起）
+- Done：3（RISE；HIL + Multi-Task Ref RL 合并笔记）
+- **本月新读完**：2（HIL / Multi-Task Ref RL 姊妹篇，2026-06-12）
