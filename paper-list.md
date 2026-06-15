@@ -49,6 +49,7 @@ flowchart TD
 | LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion | [arXiv 2602.12215](https://arxiv.org/abs/2602.12215) | #world-model #data-quality #manipulation #dexterous-hand #empirical #core | 聚焦异质 embodied 数据的**质量问题**：不丢弃低质量轨迹，而是「给不同质量的数据分配不同角色」。跟 RISE/RECAP 的三类数据（expert/correction/rollout 区别对待）是同一主题——读时可能抽出一个「按数据质量分配角色」的概念笔记。latent dynamics + policy + visual forecasting 在结构化隐空间联合训练，含灵巧手 / 接触丰富任务。 | 2026-05-16 |
 | RL Token: Bootstrapping Online RL with Vision-Language-Action Models | [arXiv 2604.23073](https://arxiv.org/abs/2604.23073) | #RL #post-training #VLA #manipulation #empirical #core | 又一个「VLA 后训练做 online RL」的方案，跟 RISE / LWD 同问题、不同解：RL Token 走**极简路线**——加一个紧凑的「RL token」读出表示 + 小 actor-critic head，既保留预训练知识又给 RL 一个接口，真机几分钟到几小时精炼动作。相对 RISE（想象空间）/ LWD（舰队真机），它是「最小侵入式」改造。Sergey Levine 组。 | 2026-05-16 |
 | DiT4DiT: Jointly Modeling Video Dynamics and Actions for Generalizable Robot Control | [arXiv 2506.17518](https://arxiv.org/abs/2506.17518) | #world-model #VLA #manipulation #empirical #core | **Joint Diffusion WAM**（[[世界模型 主题地图]] §5.2b）这条线很有影响力的工作——跟 UWM / Cosmos Policy / [[LDA-1B]] / UVA / DreamZero 同簇。跟我已读的 [[RISE  Self-Improving Robot Policy with Compositional World Model\|RISE]] 是**结构性对照**：RISE 把 WM 当外部工具（cascaded 思想，[[Compositional World Model]]），DiT4DiT 把 WM 整合进策略架构本身（joint）——回答的是同一问题的两种范式。 | 2026-05-29 |
+| HERMES: Human-to-Robot Embodied Learning from Multi-Source Motion Data for Mobile Dexterous Manipulation | [arXiv 2508.20085](https://arxiv.org/abs/2508.20085) | #data #cross-embodiment #manipulation #dexterous-hand #mobile-robot #RL #empirical #core | 触发 [[机器人学习的数据来源 主题地图]] 的那篇——多源人类手部动作 + RL + 端到端深度图像 sim2real，统一训移动双臂灵巧手。跟 [[LDA-1B]] 关注的"异质数据"是同一片张力的两种切入：LDA-1B 谈质量分配，HERMES 谈跨形态适配 + sim2real。我的方向（移动灵巧手 + RL 后训练）几乎全押在这条线上。 | 2026-06-16 |
 
 ### P1 想读（相关但不急，3 个月内读）
 
@@ -102,7 +103,9 @@ flowchart TD
 - `#humanoid-control` —— 人形全身运动控制 / 角色动画（parkour / locomotion / 全身技能）
 - `#adversarial-imitation` —— 对抗模仿学习（AIL / AMP / ASE：判别器做分布匹配）
 - `#advantage-conditioned` —— Advantage-conditioned 训练范式
+- `#data` —— 数据来源 / 采集协议 / 数据集（综合）
 - `#data-quality` —— 数据质量 / 异质数据处理 / 按质量分配角色
+- `#cross-embodiment` —— 跨形态适配（人 → 机器人 / 机型 → 机型）
 - `#inference-dynamics` —— 推理动力学：策略如何表示 / 生成 / 实时执行动作
 - `#representation-learning` —— 表示学习 / state representation（RSSM / JEPA / contrastive / bisimulation 的上位词）
 
@@ -148,7 +151,7 @@ flowchart TD
 
 ## 📊 统计（手动维护，月底盘点用）
 
-- To-Read 总数：9（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token / DiT4DiT；P1：Decoupled Q-Chunking / DyWA / SRL Survey）
+- To-Read 总数：10（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token / DiT4DiT / HERMES；P1：Decoupled Q-Chunking / DyWA / SRL Survey）
 - Reading：2（World Action Models 综述，2026-05-17 起；DSRL，2026-06-10 起）
 - Done：3（RISE；HIL + Multi-Task Ref RL 合并笔记）
 - **本月新读完**：2（HIL / Multi-Task Ref RL 姊妹篇，2026-06-12）
