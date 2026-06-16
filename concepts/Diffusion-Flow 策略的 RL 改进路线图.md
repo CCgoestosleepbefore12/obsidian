@@ -48,6 +48,9 @@ flowchart LR
 | **局限** | 工程补丁，天花板最低 | 表达力无理论保证、依赖 base 可 steer | 不稳/贵，全在跟去噪链搏斗 | 依赖 value 模型质量 |
 | **代表** | V-GPS · ResiP | **DSRL** | **DPPO**（穿）· **QAM**（绕） | **RECAP / RISE** |
 
+> [!warning] 2026-06 补：③ 里还有第三条子路线 **③c 偏好式 / 隐式 reward 对比**
+> ③a 硬穿链（policy gradient）、③b 绕链（Q/critic 驱动）之外，还有一条 **DPO 一脉**：用 flow-matching 回归损失当**隐式 reward**，做成对偏好对比（免 critic、离线）。代表 **Flow-DPO / GRAPE / [[Hy-Embodied-0.5-VLA (FlowPRO)\|RPRO(FlowPRO)]]**。机制详见 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]]。它和 ④（advantage-conditioned）的关键差异：③c 用**二元偏好**（per-state 直接注入、不被稀释，但丢 advantage 幅度），④ 用**标量条件**（保留幅度、但 token 注入会被上下文稀释）。
+
 ---
 
 ## 2. 只需记住 4 个代表
@@ -118,6 +121,14 @@ flowchart LR
 | FQL 后续 | **One-Step FQL** · **Guided Flow Policy** · **Q-Flow** | [2508.13904](https://arxiv.org/abs/2508.13904) · [2512.03973](https://arxiv.org/abs/2512.03973) · [2605.13435](https://arxiv.org/abs/2605.13435) |
 | （库里已有） | **QAM**（adjoint matching 逐步监督，📥 P0），见 [[强化学习后训练 主题地图]] §3.3 | [2601.14234](https://arxiv.org/abs/2601.14234) |
 
+**③c 偏好式 / 隐式 reward 对比（DPO 一脉，免 critic、离线）** —— 见 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]]
+
+| 文章 | 一句话 | arXiv |
+| :--- | :--- | :--- |
+| **Flow-DPO** | 首提「per-sample flow-matching 回归损失当 NLL 代理」做 DPO，是这条线的奠基；RPRO 的直接前身 | _待核实_ |
+| **GRAPE** | 轨迹级偏好的 flow 策略优化；RPRO 批评其 per-state 信号被稀释 | _待核实_ |
+| **RPRO / FlowPRO**（✅ 已读） | flow-matching loss 当隐式 reward + **近端正则**锚定绝对值防 reward hacking + **对比梯度抵消**安全混 SFT；干预-回滚 + Smooth Interpolation 收稠密 per-state 偏好。reward-free 真机离线 RL，超 DAgger / π0.6\* | [[Hy-Embodied-0.5-VLA (FlowPRO)\|笔记]] · [2606.14409](https://arxiv.org/abs/2606.14409) |
+
 ### 路线 ④：改条件输入（advantage-conditioned）
 
 | 文章 | 一句话 | arXiv |
@@ -148,7 +159,8 @@ flowchart LR
 
 - 这张图是 [[强化学习后训练 主题地图]] §4 那根「信号来源 × 侵入程度」对照轴在「diffusion/flow 策略怎么被 RL 改」这个切面上的展开。
 - 我的研究想法「把 chunk 级 advantage 写进 flow 的 v_target」（见 [[Legato 速度场推导]] §7）在这张图上的位置：**用④的思想做③b 的事**——比 QAM 的逐步监督更进一步，把价值引导内化成训练目标本身。
-- 读序建议：DSRL（在读）→ DPPO → FQL → QAM（P0）。读完这四篇，§3 的文章池基本都能秒懂定位。
+- **2026-06 更新（重要）**：读完 [[Hy-Embodied-0.5-VLA (FlowPRO)\|FlowPRO]] 后，我的 idea 在图上的定位更清楚了——它其实落在 **③c（偏好式）与 ④（advantage-conditioned）之间**：③c 的 RPRO 用二元偏好（直接、不被稀释，但丢幅度），④ 的 π0.6\* 用标量条件（保留幅度，但 token 被稀释）。**我的差异化 = 取两者之长——保留 advantage 幅度的连续加权、直接写进速度场**。π0.6\* 和 RPRO 因此都是我必须正面对照的 baseline。
+- 读序建议：DSRL（在读）→ DPPO → FQL → QAM（P0）；③c 这条补读 **Flow-DPO**（RPRO 前身）。读完这几篇，§3 的文章池基本都能秒懂定位。
 
 ---
 

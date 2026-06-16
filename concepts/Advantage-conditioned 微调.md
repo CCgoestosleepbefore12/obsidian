@@ -100,9 +100,12 @@ PPO 和 DSRL 在 chunk-output VLA 上反而把成功率打下去——advantage-
 
 | 论文 | advantage 来源 | 创新点 | 备注 |
 | :--- | :--- | :--- | :--- |
-| [[RECAP]] (π₀.₆) | VLM progress 模型 | **首次提出**该范式 | 离线 + 部分 on-policy |
+| [[RECAP]] (π₀.₆) | VLM progress 模型 | **首次提出**该范式 | 离线 + 部分 on-policy；⚠️ 其 π0.6\* 变体在 [[Hy-Embodied-0.5-VLA (FlowPRO)\|FlowPRO]] 真机对照里**被 RPRO 比下去**（见对立思路） |
 | [[RISE]] | dynamics rollout → value (progress + TD) | 把 advantage 升级为 WM 内循环；修正 expert 数据处理 | 想象空间 on-policy |
 | [[π₀.₅]] | _以后读到再填_ | | |
+
+> [!warning] 2026-06：advantage-conditioned 的一个被证伪的弱点
+> [[Hy-Embodied-0.5-VLA (FlowPRO)\|FlowPRO]] 用**完全相同**的成对偏好数据，对照了 π0.6\*（advantage 当 conditioning token 注入）vs RPRO（per-state 偏好对比）——**RPRO 全面更优**。作者归因：advantage 当**单个 conditioning token** 注入是「间接压力，会被 VLM 上下文稀释」。这是本范式的一个真实软肋：**标量条件保留了 advantage 幅度，但注入方式太弱。** 我的研究启示见 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]] 与 [[flow v_target advantage（研究想法）]]——取「保留幅度」+「直接进速度场不被稀释」之长。
 
 ---
 
@@ -111,6 +114,7 @@ PPO 和 DSRL 在 chunk-output VLA 上反而把成功率打下去——advantage-
 - **[[PPO]]**：直接 policy gradient 最大化 reward；对 diffusion / chunk output 适配难
 - **[[DSRL]]**：只在 noise input 上做 RL，不动主权重——稳但能力有限
 - **[[DPO]]**：偏好对学习；需要成对偏好数据；不直接用 advantage
+- **[[偏好式 Flow 策略优化（Flow-DPO·RPRO）|③c 偏好式 (RPRO/FlowPRO)]]**：用 per-state **二元偏好对比**注入信号，实测优于 advantage-conditioned 的 token 注入——但丢掉了 advantage 的标量幅度，与本范式各有取舍
 
 ---
 

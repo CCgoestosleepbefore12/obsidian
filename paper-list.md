@@ -85,6 +85,7 @@ flowchart TD
 | RISE: Self-Improving Robot Policy with Compositional World Model | #world-model #VLA #model-based-rl #core | 2026-05-15 | [[RISE  Self-Improving Robot Policy with Compositional World Model]] |
 | HIL: Hybrid Imitation Learning for Dynamic Athletic Control（TOG 2026） | #RL #imitation-learning #humanoid-control #adversarial-imitation #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
 | Generalizing from References: Multi-Task Reference & Goal-Driven RL（[arXiv 2602.20375](https://arxiv.org/abs/2602.20375)，真机 G1） | #RL #imitation-learning #humanoid-control #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
+| Hy-Embodied-0.5-VLA: From VLA Models to a Real-World Robot Learning Stack（[arXiv 2606.14409](https://arxiv.org/abs/2606.14409)，Tencent，FlowPRO） | #VLA #RL #post-training #flow-matching #manipulation #core | 2026-06-16 | [[Hy-Embodied-0.5-VLA (FlowPRO)]]（抽出 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]] 概念 + 给路线图补 ③c） |
 
 ---
 
@@ -153,5 +154,5 @@ flowchart TD
 
 - To-Read 总数：10（P0：LWD / Q-chunking / QAM / LDA-1B / RL-Token / DiT4DiT / HERMES；P1：Decoupled Q-Chunking / DyWA / SRL Survey）
 - Reading：2（World Action Models 综述，2026-05-17 起；DSRL，2026-06-10 起）
-- Done：3（RISE；HIL + Multi-Task Ref RL 合并笔记）
+- Done：4（RISE；HIL + Multi-Task Ref RL 合并笔记；Hy-Embodied-0.5-VLA / FlowPRO）
 - **本月新读完**：2（HIL / Multi-Task Ref RL 姊妹篇，2026-06-12）
