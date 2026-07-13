@@ -101,6 +101,7 @@ flowchart LR
 | 文章 | 一句话 | arXiv |
 | :--- | :--- | :--- |
 | **DPPO** | 奠基作：去噪过程 = 内层 MDP、环境 = 外层 MDP，两层 MDP 上跑 PPO | [2409.00588](https://arxiv.org/abs/2409.00588) |
+| **SAC Flow** | **off-policy 版穿链**：发现 flow 的 Euler 积分 **≡ residual RNN**，梯度病同 RNN → 重参数化速度网 **Flow-G**（门控）/ **Flow-T**（解码）+ noise-augmented rollout，SAC 端到端、省样本；ICLR 2026 投稿。📥 P0 队列 | [2509.25756](https://arxiv.org/abs/2509.25756) |
 | **ReinFlow** | flow 版：往确定性 flow 路径注入可学习噪声 → 似然可精确算，1 步去噪也能 RL（NeurIPS 2025） | [2505.22094](https://arxiv.org/abs/2505.22094) |
 | **FPO（flow VLA）** | 用 per-sample flow-matching loss 变化量重构 importance sampling | [2510.09976](https://arxiv.org/abs/2510.09976) |
 | （库里已有） | **π_RL**（Flow-Noise / Flow-SDE），见 [[强化学习后训练 主题地图]] §3.1 | [2510.25889](https://arxiv.org/abs/2510.25889) |
@@ -116,7 +117,8 @@ flowchart LR
 | **DIPO** | 用 ∇ₐQ 改动作本身（action gradient），actor 再拟合改过的动作 | _待核实_ |
 | **FQL** | flow 只做 BC，另训 one-step 策略最大化 Q + 从 flow 蒸馏（**Park/Li/Levine，和 Q-chunking 同组**） | [2502.02538](https://arxiv.org/abs/2502.02538) |
 | FQL 后续 | **One-Step FQL** · **Guided Flow Policy** · **Q-Flow** | [2508.13904](https://arxiv.org/abs/2508.13904) · [2512.03973](https://arxiv.org/abs/2512.03973) · [2605.13435](https://arxiv.org/abs/2605.13435) |
-| （库里已有） | **QAM**（adjoint matching 逐步监督，📥 P0），见 [[强化学习后训练 主题地图]] §3.3 | [2601.14234](https://arxiv.org/abs/2601.14234) |
+| （库里已有） | **QAM**（adjoint matching 逐步监督，📥 P1），见 [[强化学习后训练 主题地图]] §3.3。**2026-07-13 线上精读框架结论**：`L_AM` 把边界条件 `g̃(X,1)=−∇Q` 的 adjoint 状态（backward ODE，只用 behavior 模型 f_β 算、不反传被优化网络）写进速度回归目标；目标分布 **`π_θ ∝ π_β·e^{τQ}` ≡ advantage-conditioned 后验**——④和③b 指向同一分布，只是机制不同；chunk h=5、QAM-FQL/EDIT 保多模态；OGBench state-based | [2601.14234](https://arxiv.org/abs/2601.14234) |
+| **Q-VGM** | Q-Guided Value-Gradient Matching for **flow VLA**——「QAM 式价值梯度匹配 × 视觉 VLA」这个格子 2026-06 已被占。**正是我 2026-07 放弃『QAM 内化搬上视觉』主线的印证**——转向「质量 × advantage 标签」是对的 | [2606.08015](https://arxiv.org/abs/2606.08015) |
 
 ### 路线 ④：改条件输入（advantage-conditioned）
 
