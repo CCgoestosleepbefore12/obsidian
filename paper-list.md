@@ -50,6 +50,7 @@ flowchart TD
 | DiT4DiT: Jointly Modeling Video Dynamics and Actions for Generalizable Robot Control | [arXiv 2506.17518](https://arxiv.org/abs/2506.17518) | #world-model #VLA #manipulation #empirical #core | **Joint Diffusion WAM**（[[世界模型 主题地图]] §5.2b）这条线很有影响力的工作——跟 UWM / Cosmos Policy / [[LDA-1B]] / UVA / DreamZero 同簇。跟我已读的 [[RISE  Self-Improving Robot Policy with Compositional World Model\|RISE]] 是**结构性对照**：RISE 把 WM 当外部工具（cascaded 思想，[[Compositional World Model]]），DiT4DiT 把 WM 整合进策略架构本身（joint）——回答的是同一问题的两种范式。 | 2026-05-29 |
 | π*₀.₆: a VLA That Learns From Experience（**RECAP 原文**） | [arXiv 2511.14759](https://arxiv.org/abs/2511.14759)（Physical Intelligence） | #RL #post-training #VLA #advantage-conditioned #core | **队列里最反常的缺口，补上**：`~/recap` 就是它的 standalone 复现（offline returns → VL critic → N-step advantage → CFG 条件化 π0/π0.5），**我在实现它却没精读原文**。也是主线研究问题「质量 × advantage 标签」的宿主方法——它假设 expert/correction 是干净的（原文："corrections are **assumed** to be expert-quality"），这个假设正是我要攻的点。[[Advantage-conditioned 微调]] 的第一实例。 | 2026-07-13 |
 | ROVE: Unlocking Human Interventions for Humanoid Manipulation via RL | [arXiv 2606.17011](https://arxiv.org/abs/2606.17011) | #RL #post-training #VLA #data-quality #humanoid-control #core | **主线撞车检查（2026-07-13）发现的头号近邻，必读必比较**：把人类干预数据当 mixed-quality，用 OVE（Optimistic Value Estimation）学 critic 做**事后**质量判断，让 actor 侧重高价值行为而非无差别模仿。**与我主线的差异**（= 我的定位空间）：① 它纯靠学出来的 critic（事后），我有 data_filter 的**先验** curation 信号（物理/运动学闸门）——先验信号能破「V 自己就是脏数据训的」循环依赖；② 它只管干预数据，我管 **demo + correction + rollout 全分类 × 质量档位 → 标签角色映射**；③ 场景不同（人形 vs 双臂 pika/UMI+遥操）。 | 2026-07-13 |
+| HERMES: Human-to-Robot Embodied Learning from Multi-Source Motion Data for Mobile Dexterous Manipulation | [arXiv 2508.20085](https://arxiv.org/abs/2508.20085) | #data #cross-embodiment #manipulation #dexterous-hand #mobile-robot #RL #empirical #core | 触发 [[机器人学习的数据来源 主题地图]] 的那篇——多源人类手部动作 + RL + 端到端深度图像 sim2real，统一训移动双臂灵巧手。跟 [[LDA-1B]] 关注的"异质数据"是同一片张力的两种切入：LDA-1B 谈质量分配，HERMES 谈跨形态适配 + sim2real。我的方向（移动灵巧手 + RL 后训练）几乎全押在这条线上。 | 2026-06-16 |
 
 ### P1 想读（相关但不急，3 个月内读）
 
@@ -87,6 +88,7 @@ flowchart TD
 | RISE: Self-Improving Robot Policy with Compositional World Model | #world-model #VLA #model-based-rl #core | 2026-05-15 | [[RISE  Self-Improving Robot Policy with Compositional World Model]] |
 | HIL: Hybrid Imitation Learning for Dynamic Athletic Control（TOG 2026） | #RL #imitation-learning #humanoid-control #adversarial-imitation #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
 | Generalizing from References: Multi-Task Reference & Goal-Driven RL（[arXiv 2602.20375](https://arxiv.org/abs/2602.20375)，真机 G1） | #RL #imitation-learning #humanoid-control #related | 2026-06-12 | [[参考运动作为先验的人形 RL（HIL × Multi-Task Reference RL）]]（合并笔记） |
+| Hy-Embodied-0.5-VLA: From VLA Models to a Real-World Robot Learning Stack（[arXiv 2606.14409](https://arxiv.org/abs/2606.14409)，Tencent，FlowPRO） | #VLA #RL #post-training #flow-matching #manipulation #core | 2026-06-16 | [[Hy-Embodied-0.5-VLA (FlowPRO)]]（抽出 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]] 概念 + 给路线图补 ③c） |
 
 ---
 
@@ -106,7 +108,9 @@ flowchart TD
 - `#humanoid-control` —— 人形全身运动控制 / 角色动画（parkour / locomotion / 全身技能）
 - `#adversarial-imitation` —— 对抗模仿学习（AIL / AMP / ASE：判别器做分布匹配）
 - `#advantage-conditioned` —— Advantage-conditioned 训练范式
+- `#data` —— 数据来源 / 采集协议 / 数据集（综合）
 - `#data-quality` —— 数据质量 / 异质数据处理 / 按质量分配角色
+- `#cross-embodiment` —— 跨形态适配（人 → 机器人 / 机型 → 机型）
 - `#inference-dynamics` —— 推理动力学：策略如何表示 / 生成 / 实时执行动作
 - `#representation-learning` —— 表示学习 / state representation（RSSM / JEPA / contrastive / bisimulation 的上位词）
 
@@ -152,8 +156,8 @@ flowchart TD
 
 ## 📊 统计（手动维护，月底盘点用）
 
-- To-Read 总数：12（P0：**π*₀.₆/RECAP** / **ROVE** / LWD / Q-chunking / LDA-1B / RL-Token / DiT4DiT；P1：Decoupled Q-Chunking / DyWA / SRL Survey / QAM↓ / SAC Flow↓）
+- To-Read 总数：13（P0：**π*₀.₆/RECAP** / **ROVE** / LWD / Q-chunking / LDA-1B / RL-Token / DiT4DiT / HERMES；P1：Decoupled Q-Chunking / DyWA / SRL Survey / QAM↓ / SAC Flow↓）
 - **2026-07-13 重排**：主线定为「数据质量 × advantage 标签」（撞车检查通过，头号近邻 ROVE 已登记）→ π*₀.₆/RECAP、ROVE 进 P0；QAM、SAC Flow 降 P1（flow-RL 机制线退为背景，Q-VGM 已占「QAM×视觉VLA」、GigaBrain-0.5M* 已占「世界模型价值×VLA」——两条被放弃线均被证实有人做，转向正确）
 - Reading：2（World Action Models 综述，2026-05-17 起；DSRL，2026-06-10 起）
-- Done：3（RISE；HIL + Multi-Task Ref RL 合并笔记）
+- Done：4（RISE；HIL + Multi-Task Ref RL 合并笔记；Hy-Embodied-0.5-VLA / FlowPRO）
 - **本月新读完**：2（HIL / Multi-Task Ref RL 姊妹篇，2026-06-12）

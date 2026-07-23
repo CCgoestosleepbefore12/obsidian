@@ -2,7 +2,7 @@
 
 > [!info] 状态：积累中  
 > 这是一个**训练方法型**概念，每读到新实例就扩一行。  
-> 关联：[[RL 与模型后训练]]｜上位概念：[[参考运动作为塑形先验]]（本范式是"软先验"的 VLA 侧实现，与人形控制的多任务路线并列）｜对照：[[PPO]] [[DSRL]] [[DPO]]
+> 关联：[[RL 与模型后训练]]｜上位概念：[[参考运动作为塑形先验]]（本范式是"软先验"的 VLA 侧实现，与人形控制的多任务路线并列）｜理论母体：见 §理论基石（CFGRL）——本范式贝叶斯后验形式的通用算法来源｜对照：[[PPO]] [[DSRL]] [[DPO]]
 
 **Tags**: #concept #post-training #RL #VLA
 
@@ -96,13 +96,52 @@ PPO 和 DSRL 在 chunk-output VLA 上反而把成功率打下去——advantage-
 
 ---
 
+## 理论基石：CFGRL
+
+> [!info] 这一节回答「为什么整套范式成立」
+> 上面的 RECAP / RISE 都是**实例**；本节是它们共同的**上位算法**。论文 *Diffusion Guidance Is a Controllable Policy Improvement Operator*（Frans、Park、Abbeel、Levine，arXiv [2505.23458](https://arxiv.org/abs/2505.23458)），方法自名 **CFGRL**（Classifier-Free Guidance + RL）。注意：它**不是 VLA/机器人论文**，而是在 offline-RL / goal-conditioned BC 上验证的**通用策略改进算法**——所以放在概念层、不进 [[强化学习后训练 主题地图]] 的某个 VLA 子角度。
+
+**它就是本笔记那个公式的通用出处。** 把 §核心思想 的贝叶斯后验和 CFGRL 的 product policy 并排：
+
+```
+本笔记：   π̂(a|o,ℓ) ∝ π_ref(a|o,ℓ) · p(I | A)^β
+CFGRL：    π_improved(a|s) ∝ π_ref(a|s) · exp(A(s,a)/T)
+```
+
+同一个东西——"参考策略 × 最优性加权"。CFGRL 的做法：给每条 (s,a) 按 advantage 贴一个二元 optimality 标签 `o`（`p(o=1|s,a) ∝ exp(A/T)`），训练一个**条件生成策略** `π(a|s,o)` 同时保留无条件 `π(a|s)`——这正是 classifier-free guidance 的训练范式（随机 drop 条件）。
+
+> [!tip] 题眼：本笔记里那个抽象的指数 **β，就是 CFG 的 guidance scale `w`**
+> 推理时套 CFG：`ε̃ = ε(a|s) + w·(ε(a|s,o=1) − ε(a|s))`。**调大 `w` = 调大 β = 加码乐观**，把动作分布更使劲推向"高 advantage"那一侧——而且是**测试期可调、不重训、不学 value、不做 argmax**。CFGRL 用 flow matching 实现。
+
+**β 旋钮视角下，整个家族一眼看清：**
+
+| 方法 | β（乐观旋钮） | 旋钮在哪 | 是否 VLA |
+| :--- | :--- | :--- | :--- |
+| [[RECAP]] / [[RISE]] | **固定 β=1**（推理时 prompt `adv=1`） | 训练期条件 | 是 |
+| [[ROVE]] | **固定 β=1**；另在 critic 侧用 expectile τ 控乐观 | 训练期条件 + critic | 是（HIL flow VLA） |
+| **CFGRL** | **β = w 可调**（测试期连续调） | 采样期 guidance | 否（通用算法） |
+
+→ RECAP / RISE / ROVE 都是 **β=1 的特例**；CFGRL 是把 β 解放成可调旋钮的**一般式**。
+
+> [!question] 接我的研究线
+> FlowPRO 批评"advantage 当单个 conditioning token 注入太弱、会被 VLM 上下文稀释"（见 §已知实例 的 2026-06 警告）。CFGRL 是同一难题的**第三条解法**：同样是标量条件，但**用 guidance 在采样期强行放大**，绕过"注入太弱"。把它和另外两条放一起做对照轴——
+> - [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]]：换成 per-state 二元偏好对比（丢幅度）
+> - [[flow v_target advantage（研究想法）]]：直接焊进速度场（保幅度、不被稀释）
+> - **CFGRL**：保留标量条件 + guidance 放大（保幅度、靠外推而非改目标）
+> 三者各占"保幅度 / 抗稀释 / 是否改训练目标"这三个维度的不同角，是我那个 idea 投稿时绕不开的正面对比。
+
+---
+
 ## 已知实例
 
 | 论文 | advantage 来源 | 创新点 | 备注 |
 | :--- | :--- | :--- | :--- |
-| [[RECAP]] (π₀.₆) | VLM progress 模型 | **首次提出**该范式 | 离线 + 部分 on-policy |
+| [[RECAP]] (π₀.₆) | VLM progress 模型 | **首次提出**该范式 | 离线 + 部分 on-policy；⚠️ 其 π0.6\* 变体在 [[Hy-Embodied-0.5-VLA (FlowPRO)\|FlowPRO]] 真机对照里**被 RPRO 比下去**（见对立思路） |
 | [[RISE]] | dynamics rollout → value (progress + TD) | 把 advantage 升级为 WM 内循环；修正 expert 数据处理 | 想象空间 on-policy |
 | [[π₀.₅]] | _以后读到再填_ | | |
+
+> [!warning] 2026-06：advantage-conditioned 的一个被证伪的弱点
+> [[Hy-Embodied-0.5-VLA (FlowPRO)\|FlowPRO]] 用**完全相同**的成对偏好数据，对照了 π0.6\*（advantage 当 conditioning token 注入）vs RPRO（per-state 偏好对比）——**RPRO 全面更优**。作者归因：advantage 当**单个 conditioning token** 注入是「间接压力，会被 VLM 上下文稀释」。这是本范式的一个真实软肋：**标量条件保留了 advantage 幅度，但注入方式太弱。** 我的研究启示见 [[偏好式 Flow 策略优化（Flow-DPO·RPRO）]] 与 [[flow v_target advantage（研究想法）]]——取「保留幅度」+「直接进速度场不被稀释」之长。
 
 ---
 
@@ -111,6 +150,7 @@ PPO 和 DSRL 在 chunk-output VLA 上反而把成功率打下去——advantage-
 - **[[PPO]]**：直接 policy gradient 最大化 reward；对 diffusion / chunk output 适配难
 - **[[DSRL]]**：只在 noise input 上做 RL，不动主权重——稳但能力有限
 - **[[DPO]]**：偏好对学习；需要成对偏好数据；不直接用 advantage
+- **[[偏好式 Flow 策略优化（Flow-DPO·RPRO）|③c 偏好式 (RPRO/FlowPRO)]]**：用 per-state **二元偏好对比**注入信号，实测优于 advantage-conditioned 的 token 注入——但丢掉了 advantage 的标量幅度，与本范式各有取舍
 
 ---
 
